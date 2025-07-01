@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Portal WiFi - Error</title>
+    <style>
+        
+        body {
+            font-family: Arial, "微软雅黑", sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-color: #FFFFFF;
+            background-image: url("{{ url_for('static', filename='images/fachada_utp.jpg') }}");
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 10px;
+        }
+
+        .logo-left img {
+            background-color: rgba(255, 255, 255, 0.568);
+            border-radius: 100%;
+            max-width: 100px;
+        }
+
+        #main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #status-container {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(7px);
+            text-align: center;
+            padding: 30px 40px;
+            border-radius: 15px;
+            color: #333;
+            max-width: 450px;
+        }
+
+        #status-container h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #000;
+            margin-top: 0;
+        }
+
+        #status-container p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-left">
+            <img src="{{ url_for('static', filename='images/tropical_utp_logo.jpg') }}" alt="Logo UTP">
+        </div>
+    </header>
+
+    <main id="main-container">
+        <div id="status-container">
+            <h2>Error 404 - Página No Encontrada</h2>
+
+            <div>
+                <p>Lo sentimos, la página que estás buscando no existe o ha sido movida.</p>
+            </div>
+
+            <a href="{{ url_for('home') }}" style="text-decoration: none; color: #681a5d; font-weight: bold;">
+                Ir a la Página Principal
+            </a>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

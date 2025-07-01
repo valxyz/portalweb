@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+  <title>Conectado - Portal WiFi UTP</title>
+  <style>
+    /* --- Estilos (sin cambios) --- */
+    body {
+      font-family: Arial, "微软雅黑", sans-serif;
+      margin: 0;
+      height: 100vh;
+      background-color: #FFFFFF;
+      background-image: url("{{ url_for('static', filename='images/fachada_utp.jpg') }}");
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 10px;
+    }
+
+    .logo-left img {
+      background-color: rgba(255, 255, 255, 0.568);
+      border-radius: 100%;
+      max-width: 100px;
+    }
+
+    #main-container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Contenedor para el nuevo contenido */
+    #status-container {
+      background-color: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(7px);
+      text-align: center;
+      padding: 30px 40px;
+      border-radius: 15px;
+      color: #333;
+      max-width: 450px;
+    }
+
+    #status-container h2 {
+      font-size: 32px;
+      font-weight: bold;
+      color: #000;
+      margin-top: 0;
+    }
+
+    #status-container p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    #connection-time {
+      font-weight: bold;
+      font-family: 'Courier New', Courier, monospace;
+      background-color: rgba(0, 0, 0, 0.1);
+      padding: 5px 8px;
+      border-radius: 5px;
+    }
+
+    /* Reutilizamos el estilo del botón de login para el de logout */
+    #logout-btn {
+      background-color: #681a5d;
+      border-radius: 30px;
+      border: none;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      color: white;
+      width: 350px;
+      height: 45px;
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #session-timer {
+      /* Estilo para el cronómetro */
+      font-weight: bold;
+      font-family: 'Courier New', Courier, monospace;
+      background-color: rgba(0, 0, 0, 0.1);
+      padding: 5px 8px;
+      border-radius: 5px;
+      font-size: 18px;
+      /* Un poco más grande para visibilidad */
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo-left">
+      <img src="{{ url_for('static', filename='images/tropical_utp_logo.jpg') }}" alt="Logo UTP">
+    </div>
+  </header>
+
+  <main id="main-container">
+    <div id="status-container">
+      <h2>Conexión Exitosa</h2>
+
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#45ad61" class=""
+          viewBox="0 0 16 16">
+          <path
+            d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
+          <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
+        </svg>
+        <p>Ya tiene acceso a la red.</p>
+      </div>
+
+
+      <span id="session-timer">00:00:00</span>
+
+      <form action="{{ url_for('logout') }}" method="POST">
+        <button type="submit" id="logout-btn">CERRAR SESIÓN</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // 1. Selecciona el elemento donde se mostrará el reloj.
+    const clockElement = document.getElementById('session-timer');
+
+    // 2. Función que obtiene y formatea la hora actual.
+    function updateLiveClock() {
+      // Obtiene el objeto de fecha y hora actual.
+      const now = new Date();
+
+      // Extrae cada componente de la fecha y hora.
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Los meses son 0-11
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+
+      // Construye el string con el formato YYYY-MM-DDTHH:mm:ss
+      const formattedTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+
+      // Actualiza el contenido del span con la hora formateada.
+      clockElement.textContent = formattedTime;
+    }
+
+    // 3. Establece un intervalo para ejecutar la función cada segundo.
+    setInterval(updateLiveClock, 1000);
+
+    // 4. Llama a la función una vez al inicio para que no haya un segundo de retraso.
+    updateLiveClock();
+  </script>
+
+
+</body>
+
+</html>

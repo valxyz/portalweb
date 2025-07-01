@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+  <title>Portal WiFi - UTP</title>
+  <style>
+    /* --- Estilos (sin cambios) --- */
+    body {
+      font-family: Arial, "微软雅黑", sans-serif;
+      margin: 0;
+      height: 100vh;
+      background-color: #FFFFFF;
+      /* FLASK CHANGE 1: Usar url_for para la imagen de fondo */
+      background-image: url("{{ url_for('static', filename='images/fachada_utp.jpg') }}");
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 10px;
+    }
+
+    .logo-left img {
+      background-color: rgba(255, 255, 255, 0.568);
+      border-radius: 100%;
+      max-width: 100px;
+    }
+
+    #main-container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #welcome-banner {
+      background-color: rgba(255, 255, 255, 0.486);
+      backdrop-filter: blur(7px);
+      margin-bottom: 20px;
+      text-align: center;
+      padding: 10px 20px;
+      border-radius: 15px;
+    }
+
+    #welcome-banner span {
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    #login-container {
+      text-align: center;
+    }
+
+    #LoginForm {
+      margin: 0;
+    }
+
+    .login-input {
+      padding-left: 35px;
+      height: 45px;
+      width: 315px;
+      background-position: 5px center;
+      background-color: white;
+      border: 1px solid gray;
+      background-repeat: no-repeat;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    #username {
+      /* FLASK CHANGE 2: Usar url_for para la imagen de usuario */
+      background-image: url("{{ url_for('static', filename='images/user.jpg') }}");
+    }
+
+    #password {
+      /* FLASK CHANGE 3: Usar url_for para la imagen de contraseña */
+      background-image: url("{{ url_for('static', filename='images/passcode.jpg') }}");
+    }
+
+    #submit-btn,
+    #disabled-btn {
+      background-color: #681a5d;
+      border-radius: 30px;
+      border: none;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      color: white;
+      width: 350px;
+      height: 45px;
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #disabled-btn {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    .terms-row {
+      text-align: left;
+      width: 350px;
+      margin-top: 15px;
+    }
+
+    .terms-row input[type='checkbox'] {
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    .terms-row label {
+      font-size: 13px;
+      vertical-align: middle;
+      background-color: rgba(0, 0, 0, 0.65);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+
+    .terms-row a {
+      font-size: 13px;
+      color: #d1a9ff;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    
+    /* Estilo para mensajes flash de Flask */
+    .flash-message {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      color: #fff;
+      text-align: center;
+    }
+    .flash-error {
+        background-color: #c74a4a;
+    }
+    .flash-success {
+        background-color: #4CAF50;
+    }
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo-left">
+      <img src="{{ url_for('static', filename='images/tropical_utp_logo.jpg') }}" alt="Logo UTP">
+    </div>
+  </header>
+
+  <main id="main-container">
+    <div id="welcome-banner">
+      <span>Bienvenido</span>
+    </div>
+
+    <div id="login-container">
+      
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form id="LoginForm" name="LoginForm" method="POST" action="{{ url_for('login') }}">
+
+        <div>
+          <input type="text" id="username" name="username" class="login-input" placeholder="Usuario"
+            autocomplete="username" required>
+        </div>
+
+        <div>
+          <input type="password" id="password" name="password" class="login-input" placeholder="Contraseña"
+            autocomplete="current-password" required>
+        </div>
+
+        <div class="terms-row">
+          <input name='checkbox_disclaimer' id='checkbox_disclaimer' type='checkbox' onclick='updateButtonState()'>
+          <label for='checkbox_disclaimer'> Acepto los términos de la <a onclick='showPolicy()'> fase de prueba. </a> </label>
+        </div>
+
+        <div>
+          <input type="submit" value="INICIAR SESIÓN" id="submit-btn" style="display:none;">
+          <input type="button" value="INICIAR SESIÓN" id="disabled-btn">
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // --- Lógica del Formulario ---
+    // La función `submitSimulation` se elimina ya que ahora el formulario se envía al servidor.
+    
+    function showPolicy() {
+    alert(
+        "El uso de esta red está sujeto a los términos y condiciones de la universidad.\n" +
+        "--- Red Experimental 5GHz ---\n" +
+        "Usted está conectado a nuestra nueva red de 5GHz, la cual se encuentra en fase de prueba. " +
+        "Esta tecnología ofrece una conexión significativamente más rápida y estable, ideal para videoconferencias y transferencia de archivos.\n\n" +
+        "Para un rendimiento óptimo, se recomienda permanecer en áreas con línea de vista a los puntos de acceso, ya que la señal de 5GHz tiene un alcance más reducido a través de paredes y otros obstáculos."
+    );
+}
+
+
+    function updateButtonState() {
+      
+      const disclaimerChecked = document.getElementById('checkbox_disclaimer').checked;
+      //const instructionsChecked = document.getElementById('checkbox_instructions').checked;
+      const submitBtn = document.getElementById('submit-btn');
+      const disabledBtn = document.getElementById('disabled-btn');
+    
+      if (disclaimerChecked) {
+        submitBtn.style.display = 'block';
+        disabledBtn.style.display = 'none';
+      } else {
+        submitBtn.style.display = 'none';
+        disabledBtn.style.display = 'block';
+      }
+
+    }
+
+    // Estado inicial al cargar la página
+    document.addEventListener('DOMContentLoaded', function () {
+      updateButtonState();
+    });
+
+  </script>
+</body>
+
+</html>
